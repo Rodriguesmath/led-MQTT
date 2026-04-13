@@ -12,8 +12,8 @@
 #include "esp_log.h"
 
 /* --- Hardware Abstraction Layer (HAL) Definitions --- */
-#define GPIO_INPUT_BTN_BITMASK  ((1ULL << 2))
-#define PIN_BTN   2 
+#define GPIO_INPUT_BTN_BITMASK  ((1ULL << 4))
+#define PIN_BTN   4 
 
 /* --- Timing & Logic Constants --- */
 #define BTN_DEBOUNCE_MS        50
@@ -37,7 +37,7 @@ static button_handle_t g_btn_light_handle = { .gpio_num = PIN_BTN, .current_stat
 static bool g_light_state = false; 
 
 /* --- MQTT Global Variables --- */
-#define BROKER_URL "mqtt://192.168.1.X" 
+#define BROKER_URL "mqtt://172.20.10.2" 
 
 /* --- Module Functions --- */
 
@@ -107,7 +107,7 @@ void system_control_task_handler(esp_mqtt_client_handle_t client) {
         
         const char *payload = g_light_state ? "ON" : "OFF";
         
-        esp_mqtt_client_publish(client, "ifpb/c6/status", payload, 0, 1, 0);
+        esp_mqtt_client_publish(client, "ifpb/projeto/led", payload, 0, 1, 0);
         
         ESP_LOGI(TAG, "Botão acionado! Estado enviado: %s", payload);
     }
@@ -118,8 +118,8 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
     switch ((esp_mqtt_event_id_t)event_id) {
         case MQTT_EVENT_CONNECTED:
             ESP_LOGI(TAG, "Conectado ao Broker!");
-            esp_mqtt_client_publish(event->client, "ifpb/c6/status", "ESP32 Conectado", 0, 1, 0);
-            esp_mqtt_client_subscribe(event->client, "ifpb/c6/comando", 0);
+            esp_mqtt_client_publish(event->client, "ifpb/projeto/led", "ESP32 Conectado", 0, 1, 0);
+            esp_mqtt_client_subscribe(event->client, "ifpb/projeto/led", 0);
             break;
 
         case MQTT_EVENT_DATA:
