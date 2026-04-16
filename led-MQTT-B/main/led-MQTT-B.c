@@ -15,12 +15,16 @@
 #define PIN_LED 4 // Usando o GPIO 4
 #define GPIO_OUTPUT_LED_BITMASK  ((1ULL << PIN_LED))
 
+/* --- Timing Constants --- */
+#define KEEP_ALIVE_INTERVAL_MS 30000
+
 /* --- MQTT Global Variables --- */
-#define BROKER_URL "mqtt://172.20.10.2"  
+#define BROKER_URL "mqtt://192.168.12.1"  
 #define MQTT_TOPIC "ifpb/projeto/led"
 
 /* --- Private Global Variables --- */
 static const char *TAG = "MQTT_NODE_B";
+static TickType_t g_last_keep_alive_tick = 0;
 
 /* --- Module Functions --- */
 
@@ -114,6 +118,21 @@ void app_main(void) {
     // Como tudo acontece via interrupção/evento de rede, 
     // a task principal pode apenas ficar "dormindo"
     while (1) {
+        TickType_t current_tick = xTaskGetTickCount();
+        
+        if ((current_tick - g_last_keep_alive_tick) >= pdMS_TO_TICKS(KEEP_ALIVE_INTERVAL_MS)) {
+            g_last_keep_alive_tick = current_tick; 
+            
+            uint32_t uptime_sec = (current_tick * portTICK_PERIOD_MS) / 1000;
+            
+            char status_payload[64];
+            snprintf(status_payload, sizeof(status_payload), "Node B - Uptime: %lu segundos", (unsigned long)uptime_sec);
+            
+            esp_mqtt_client_publish(client, "ifpb/projeto/status", status_payload, 0, 1, 0);
+            
+            ESP_LOGI(TAG, "Node B - Keep Alive enviado: %s", status_payload);
+        }
+
         vTaskDelay(pdMS_TO_TICKS(1000)); 
     }
 }

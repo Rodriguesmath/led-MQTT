@@ -17,6 +17,7 @@
 
 /* --- Timing & Logic Constants --- */
 #define BTN_DEBOUNCE_MS        50
+#define KEEP_ALIVE_INTERVAL_MS 30000
 
 typedef enum {
     BUTTON_STATE_IDLE,
@@ -35,9 +36,10 @@ typedef struct {
 static const char *TAG = "MQTT_TUTORIAL";
 static button_handle_t g_btn_light_handle = { .gpio_num = PIN_BTN, .current_state = BUTTON_STATE_IDLE };
 static bool g_light_state = false; 
+static TickType_t g_last_keep_alive_tick = 0;
 
 /* --- MQTT Global Variables --- */
-#define BROKER_URL "mqtt://172.20.10.2" 
+#define BROKER_URL "mqtt://192.168.12.1" 
 
 /* --- Module Functions --- */
 
@@ -110,6 +112,21 @@ void system_control_task_handler(esp_mqtt_client_handle_t client) {
         esp_mqtt_client_publish(client, "ifpb/projeto/led", payload, 0, 1, 0);
         
         ESP_LOGI(TAG, "Botão acionado! Estado enviado: %s", payload);
+    }
+
+    TickType_t current_tick = xTaskGetTickCount();
+    
+    if ((current_tick - g_last_keep_alive_tick) >= pdMS_TO_TICKS(KEEP_ALIVE_INTERVAL_MS)) {
+        g_last_keep_alive_tick = current_tick; 
+        
+        uint32_t uptime_sec = (current_tick * portTICK_PERIOD_MS) / 1000;
+        
+        char status_payload[64];
+        snprintf(status_payload, sizeof(status_payload), "Node A - Uptime: %lu segundos", (unsigned long)uptime_sec);
+        
+        esp_mqtt_client_publish(client, "ifpb/projeto/status", status_payload, 0, 1, 0);
+        
+        ESP_LOGI(TAG, "Node A - Keep Alive enviado: %s", status_payload);
     }
 }
 
