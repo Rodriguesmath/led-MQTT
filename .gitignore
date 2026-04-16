@@ -1,7 +1,7 @@
-/.vscode
-/build
-/sdkconfig
-/sdkconfig.old
+/led-MQTT-A/Build
+/led-MQTT-A/.vscode
+/led-MQTT-A/sdkconfig
+/led-MQTT-A/sdkconfig.old
 /led-MQTT-B/Build
 /led-MQTT-B/.vscode
 /led-MQTT-B/sdkconfig
