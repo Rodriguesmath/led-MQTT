@@ -54,7 +54,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
     switch ((esp_mqtt_event_id_t)event_id) {
         case MQTT_EVENT_CONNECTED:
             ESP_LOGI(TAG, "Conectado ao Broker!");
-            // 1. Inscreve-se no tópico imediatamente após a conexão
+            // Inscreve-se no tópico imediatamente após a conexão
             esp_mqtt_client_subscribe(event->client, MQTT_TOPIC, 0);
             ESP_LOGI(TAG, "Inscrito no tópico: %s", MQTT_TOPIC);
             break;
@@ -64,8 +64,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             printf("Tópico: %.*s\r\n", event->topic_len, event->topic);
             printf("Dados: %.*s\r\n", event->data_len, event->data);
 
-            // 2. Compara se a mensagem chegou no tópico que queremos
-            // Usamos strncmp porque as strings no MQTT da ESP não terminam com '\0' (null-terminated)
+            // Usando strncmp porque as strings no MQTT da ESP não terminam com '\0' (null-terminated)
             if (strncmp(event->topic, MQTT_TOPIC, event->topic_len) == 0) {
                 
                 // 3. Compara o Payload para ligar ou desligar o LED
