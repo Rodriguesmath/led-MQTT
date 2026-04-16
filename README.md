@@ -1,6 +1,6 @@
 # Projeto 1: Controle de LED via MQTT 💡
 
-Este projeto implementa um sistema de controle de um LED utilizando o protocolo MQTT. Foi desenvolvido como atividade prática utilizando o framework ESP-IDF, demonstrando conceitos de *Publish/Subscribe*, manipulação de GPIOs e conectividade Wi-Fi.
+Este projeto implementa um sistema de controle de LED utilizando o protocolo MQTT. Foi desenvolvido como atividade prática utilizando o framework ESP-IDF, demonstrando conceitos de *Publish/Subscribe*, manipulação de GPIOs e conectividade Wi-Fi.
 
 ## 📋 Arquitetura do Sistema
 
