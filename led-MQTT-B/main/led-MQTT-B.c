@@ -19,7 +19,7 @@
 #define KEEP_ALIVE_INTERVAL_MS 30000
 
 /* --- MQTT Global Variables --- */
-#define BROKER_URL "mqtt://192.168.12.1"  
+#define BROKER_URL "mqtt://192.168.1.101"  
 #define MQTT_TOPIC "ifpb/projeto/led"
 
 /* --- Private Global Variables --- */
