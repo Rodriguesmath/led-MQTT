@@ -39,7 +39,7 @@ static bool g_light_state = false;
 static TickType_t g_last_keep_alive_tick = 0;
 
 /* --- MQTT Global Variables --- */
-#define BROKER_URL "mqtt://192.168.12.1" 
+#define BROKER_URL "mqtt://192.168.1.101" 
 
 /* --- Module Functions --- */
 
