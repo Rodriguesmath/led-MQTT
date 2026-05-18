@@ -7,3 +7,4 @@
 /led-MQTT-B/.vscode
 /led-MQTT-B/sdkconfig
 /led-MQTT-B/sdkconfig.old
+.env
